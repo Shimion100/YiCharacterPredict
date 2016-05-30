@@ -6,7 +6,6 @@ import sys
 import timeit
 import six.moves.cPickle as pickle
 import numpy
-from PIL import Image
 import theano
 import theano.tensor as T
 from theano.tensor.signal import downsample
@@ -351,9 +350,6 @@ class CnnModel(object):
 
         self.predict_result = self.predict_model(aaIndex)
 
-
-
-
         self.validate_model = theano.function(
             [index],
             self.layer3.errors(y),
@@ -611,7 +607,7 @@ def predict():
 
 
     print("Start----------------------------------")
-    predicted_values = predict_the_model(20)
+    predicted_values = predict_the_model(80)
 
     print("Predicted values for the first 10 examples in test set:")
     print(predicted_values)
@@ -620,17 +616,17 @@ def predict():
     Main method
 """
 if __name__ == '__main__':
-    #"""
+    """
     model = CnnModel()
     model.oriInit(0.05,'mnist.pkl.gz',[20, 50],120)
     model.trainModel(50)
     with open('best_model_original.pkl', 'wb') as f:
         pickle.dump(model, f)
     storedModel = CnnModel()
-    storedModel.copyInit(model,0.05,'mnist.pkl.gz',[20, 50],10);
+    storedModel.copyInit(model,0.05,'mnist.pkl.gz',[20, 50],20);
     # save the best model
     with open('best_model.pkl', 'wb') as f:
         pickle.dump(storedModel, f)
-    #"""
+    """
     predict()
     #"""
