@@ -6,6 +6,7 @@ import sys
 import timeit
 import six.moves.cPickle as pickle
 import numpy
+from PIL import Image
 import theano
 import theano.tensor as T
 from theano.tensor.signal import downsample
@@ -271,8 +272,8 @@ class CnnModel(object):
         self.nkerns = nkerns
         self.batch_size = batch_size
         datasets = load_data(dataset)
-        self.train_set_x, self.train_set_y = datasets[0]
-        self.valid_set_x, self.valid_set_y = datasets[1]
+        #self.train_set_x, self.train_set_y = datasets[0]
+        #self.valid_set_x, self.valid_set_y = datasets[1]
         self.test_set_x, self.test_set_y = datasets[2]
 
         # Read the data
@@ -327,16 +328,7 @@ class CnnModel(object):
                             W= copy.deepcopy(fromModel.layer3.W),
                             b= copy.deepcopy(fromModel.layer3.b))
 
-        cost = self.layer3.negative_log_likelihood(y)
 
-        self.test_model = theano.function(
-            [index],
-            self.layer3.errors(y),
-            givens={
-                x: self.test_set_x[index * batch_size: (index + 1) * batch_size],
-                y: self.test_set_y[index * batch_size: (index + 1) * batch_size]
-            }
-        )
 
         self.predict_model = theano.function(
             [index],
@@ -346,9 +338,29 @@ class CnnModel(object):
             }
         )
 
+        # read the firstData every time
         aaIndex = 0
 
         self.predict_result = self.predict_model(aaIndex)
+
+
+        """
+         self.test_model = theano.function(
+            [index],
+            self.layer3.errors(y),
+            givens={
+                x: self.test_set_x[index * batch_size: (index + 1) * batch_size],
+                y: self.test_set_y[index * batch_size: (index + 1) * batch_size]
+            }
+        )
+         self.test_model = theano.function(
+            [index],
+            self.layer3.errors(y),
+            givens={
+                x: self.test_set_x[index * batch_size: (index + 1) * batch_size],
+                y: self.test_set_y[index * batch_size: (index + 1) * batch_size]
+            }
+        )
 
         self.validate_model = theano.function(
             [index],
@@ -376,7 +388,7 @@ class CnnModel(object):
                 y: self.train_set_y[index * batch_size: (index + 1) * batch_size]
             }
         )
-
+        """
 
 
         # End of building model
@@ -607,7 +619,7 @@ def predict():
 
 
     print("Start----------------------------------")
-    predicted_values = predict_the_model(80)
+    predicted_values = predict_the_model(20)
 
     print("Predicted values for the first 10 examples in test set:")
     print(predicted_values)
@@ -616,17 +628,18 @@ def predict():
     Main method
 """
 if __name__ == '__main__':
-    """
+    #"""
     model = CnnModel()
     model.oriInit(0.05,'mnist.pkl.gz',[20, 50],120)
     model.trainModel(50)
-    with open('best_model_original.pkl', 'wb') as f:
-        pickle.dump(model, f)
+
+    #create a New Model and set it's W and b
     storedModel = CnnModel()
-    storedModel.copyInit(model,0.05,'mnist.pkl.gz',[20, 50],20);
+    #set the batch size to 1
+    storedModel.copyInit(model,0.05,'0file-28.pkl.gz',[20, 50],1);
     # save the best model
     with open('best_model.pkl', 'wb') as f:
         pickle.dump(storedModel, f)
     """
     predict()
-    #"""
+    """

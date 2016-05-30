@@ -1,3 +1,13 @@
+from __future__ import print_function
+import six.moves.cPickle as pickle
+import theano
+import theano.tensor as T
+from SaveCnn import CnnModel
+from SaveCnn import HiddenLayer
+from SaveCnn import LeNetConvPoolLayer
+from SaveCnn import LogisticRegression
+
+
 def predict():
     print("Load model.....")
 
@@ -8,13 +18,11 @@ def predict():
     # compile a predictor function
     # the parameter is works;
 
-
     predict_the_model = theano.function(
         inputs=[aIndex],
         outputs=theano.shared(cnnModel.predict_result),
         on_unused_input='ignore'
     )
-
 
     print("Start----------------------------------")
     predicted_values = predict_the_model(20)
